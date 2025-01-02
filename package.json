@@ -1,0 +1,39 @@
+{
+  "name": "rest-envelop",
+  "version": "1.0.0",
+  "description": "Wrapper for working with REST API using well-known axios and node-fetch modules",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx eslint ./"
+  },
+  "keywords": [
+    "axios",
+    "node-fetch",
+    "fetch",
+    "rest",
+    "redis",
+    "memcached",
+    "caching",
+    "axios-retry",
+    "node-fetch-retry",
+    "wrappers",
+    "envelops",
+    "helpers"
+  ],
+  "author": {
+    "name": "Yurii Bondar",
+    "email": "yurii.bondar.vn@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.25.9",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cache-envelop": "^1.0.0",
+    "node-fetch": "^3.3.2"
+  }
+}
