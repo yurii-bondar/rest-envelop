@@ -2,10 +2,10 @@
 
 >#### Content
 >[About](#about)   
-[Config](#config)
-[Initialization](#initialization)
-[REST clients use](#rest-clients-use)
-[Requests execution result](#requests-execution-result)
+[Config](#config)<br>
+[Initialization](#initialization)<br>
+[REST clients use](#rest-clients-use)<br>
+[Requests execution result](#requests-execution-result)<br>
 [More about request options](#more-about-request-options)
 
 <a name="about"><h2>About</h2></a>
