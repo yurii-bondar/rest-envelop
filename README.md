@@ -99,12 +99,12 @@ module.exports = {
 ```
 <h6>Configs:</h6>
 - <i>configs.baseURL</i> — `${schema}://${hostname}`. The url to specify when creating an axios or node-fetch instance.
-  Works if you specify <i>createInstance: true</i>
-- <i>configs.optional.createInstance</i> — specify <i>true</i> if you want to create an axios or node-fetch instance and then make requests using only the appropriate API paths
-- <i>configs.optional.environment</i> — runtime environment (process.env.NODE_ENV). <i>development</i> enables <i>requestLog</i> param by default
-- <i>configs.optional.requestLog</i> — enables logging of all requests of the created instance in the format Apollo GraphQL Server
-- <i>configs.optional.cacheService.cachedStatuses</i> — indicates the list of statuses in which caching is performed. Works if you specify <i>createInstance: true</i>
-- <i>configs.optional.cacheService.memcached</i> — you can use redis or memcached for caching
+  Works if you specify <i>createInstance: true</i><br>
+- <i>configs.optional.createInstance</i> — specify <i>true</i> if you want to create an axios or node-fetch instance and then make requests using only the appropriate API paths<br>
+- <i>configs.optional.environment</i> — runtime environment (process.env.NODE_ENV). <i>development</i> enables <i>requestLog</i> param by default<br>
+- <i>configs.optional.requestLog</i> — enables logging of all requests of the created instance in the format Apollo GraphQL Server<br>
+- <i>configs.optional.cacheService.cachedStatuses</i> — indicates the list of statuses in which caching is performed. Works if you specify <i>createInstance: true</i><br>
+- <i>configs.optional.cacheService.memcached</i> — you can use redis or memcached for caching<br>
 - <i>configs.headers</i> — here you can specify any headers that should be passed in each request. <br>
 <i>P.S.</i> I advise you to use headers like <i>X-Request-Source</i> in your requests (you can of course name it whatever you want), 
 this will allow you to determine the sources of requests (for example, between your microservices), this will be extremely useful if you are using Prometheus/Grafana for monitoring
