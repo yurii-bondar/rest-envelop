@@ -1,6 +1,6 @@
 {
   "name": "rest-envelop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wrapper for working with REST API using well-known axios and node-fetch modules",
   "main": "index.js",
   "scripts": {
