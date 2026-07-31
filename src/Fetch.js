@@ -1,5 +1,6 @@
 const NodeFetch = require('./NodeFetch');
 const Base = require('./Base');
+const { RestEnvelopError } = require('./errors');
 const { FETCH_CONTENT_TYPES } = require('../constants');
 
 class Fetch extends Base {
@@ -40,7 +41,7 @@ class Fetch extends Base {
    * @throws {Error} If the NodeFetch instance has not been initialized.
    */
   instance(url, options) {
-    if (!this.#instance) throw new Error('No fetch instance available');
+    if (!this.#instance) throw new RestEnvelopError('No fetch instance available');
     return this.#instance.request(url, options);
   }
 
@@ -77,14 +78,10 @@ class Fetch extends Base {
       });
 
       const contentType = response.headers.get('Content-Type');
-      let responseData;
+      const [parseMethod] = Object.entries(FETCH_CONTENT_TYPES)
+        .find(([, regex]) => regex.test(contentType)) || [];
 
-      for (const [method, regex] of Object.entries(FETCH_CONTENT_TYPES)) {
-        if (regex.test(contentType)) {
-          responseData = await response[method]();
-          break;
-        }
-      }
+      const responseData = parseMethod ? await response[parseMethod]() : undefined;
 
       return {
         data: responseData,

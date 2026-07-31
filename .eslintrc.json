@@ -26,5 +26,13 @@
                 ]
             }
         ]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["src/errors.js"],
+            "rules": {
+                "max-classes-per-file": "off"
+            }
+        }
+    ]
 }

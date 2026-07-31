@@ -14,4 +14,7 @@ module.exports = {
     formData: /^multipart\/form-data/,
   },
   HTTP_OK_STATUS: 200,
+  DEFAULT_RETRY_BASE_DELAY_MS: 200,
+  DEFAULT_RETRY_MAX_DELAY_MS: 5000,
+  DEFAULT_RETRY_FACTOR: 2,
 };

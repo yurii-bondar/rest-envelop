@@ -1,4 +1,5 @@
 const cacheService = require('../helpers/cacheService');
+const { CacheError } = require('./errors');
 
 const { REDIS_CACHE_SERVICE, MEMCACHED_CACHE_SERVICE } = require('../constants');
 
@@ -7,9 +8,23 @@ class CacheService {
 
   #connectOptions = null;
 
+  /**
+   * @param {object} connectOptions
+   * @param {object} [connectOptions.adapter] - A custom cache client implementing
+   *  `get(key)` and `set(key, value, ttl)`. When provided, it is used as-is and
+   *  `redis`/`memcached` are ignored - this is how you plug in any cache backend
+   *  (in-memory LRU, DynamoDB, a shared client you already manage, etc.).
+   * @param {object} [connectOptions.redis] - ioredis connection options.
+   * @param {object} [connectOptions.memcached] - memcached connection options.
+   */
   constructor(connectOptions) {
     this.connectOptions = connectOptions;
-    if (this.connectOptions) this.client = cacheService(this.connectOptions);
+
+    if (connectOptions?.adapter) {
+      this.client = connectOptions.adapter;
+    } else if (this.connectOptions) {
+      this.client = cacheService(this.connectOptions);
+    }
   }
 
   get connectOptions() {
@@ -29,25 +44,37 @@ class CacheService {
   }
 
   async setCache(key, data, ttl) {
-    if (!this.client) throw new Error('No cache client available');
+    if (!this.client) throw new CacheError('set', key, new Error('No cache client available'));
 
-    if (this.connectOptions[REDIS_CACHE_SERVICE]) {
-      await this.client.set(key, JSON.stringify(data), 'EX', ttl);
-    } else if (this.connectOptions[MEMCACHED_CACHE_SERVICE]) {
-      await this.client.set(key, JSON.stringify(data), ttl);
+    try {
+      if (this.connectOptions.adapter) {
+        await this.client.set(key, JSON.stringify(data), ttl);
+      } else if (this.connectOptions[REDIS_CACHE_SERVICE]) {
+        await this.client.set(key, JSON.stringify(data), 'EX', ttl);
+      } else if (this.connectOptions[MEMCACHED_CACHE_SERVICE]) {
+        await this.client.set(key, JSON.stringify(data), ttl);
+      }
+    } catch (err) {
+      throw new CacheError('set', key, err);
     }
   }
 
   async getFromCache(key) {
-    if (!this.client) throw new Error('No cache client available');
+    if (!this.client) throw new CacheError('get', key, new Error('No cache client available'));
 
-    const data = await this.client.get(key);
+    let data;
+    try {
+      data = await this.client.get(key);
+    } catch (err) {
+      throw new CacheError('get', key, err);
+    }
+
+    if (data === undefined || data === null) return undefined;
 
     try {
       return JSON.parse(data);
     } catch (err) {
-      if (data !== undefined) console.error(`Unable to parse data from cache by key ${key}`);
-      return data;
+      throw new CacheError('get', key, new Error(`Unable to parse cached value: ${err.message}`));
     }
   }
 }

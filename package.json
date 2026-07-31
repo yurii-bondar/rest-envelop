@@ -1,23 +1,47 @@
 {
   "name": "rest-envelop",
   "version": "1.0.1",
-  "description": "Wrapper for working with REST API using well-known axios and node-fetch modules",
+  "description": "Wrapper for working with REST API using well-known axios and native fetch modules, with pluggable caching, retry with backoff, and TypeScript typings",
   "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "src",
+    "helpers",
+    "constants"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yurii-bondar/rest-envelop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yurii-bondar/rest-envelop/issues"
+  },
+  "homepage": "https://github.com/yurii-bondar/rest-envelop#readme",
   "scripts": {
-    "lint": "npx eslint ./"
+    "lint": "npx eslint ./",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:types": "tsc --noEmit --strict --esModuleInterop --skipLibCheck --target ES2020 --lib ES2020,DOM --module commonjs test-d/index.test-d.ts"
   },
   "keywords": [
     "axios",
-    "node-fetch",
     "fetch",
+    "node-fetch",
     "rest",
+    "http-client",
     "redis",
     "memcached",
     "caching",
-    "axios-retry",
-    "node-fetch-retry",
+    "retry",
+    "backoff",
     "wrappers",
     "envelops",
+    "typescript",
     "helpers"
   ],
   "author": {
@@ -28,19 +52,20 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.1",
     "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.31.0",
-    "semantic-release": "^24.2.1"
+    "jest": "^29.7.0",
+    "semantic-release": "^24.2.1",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@semantic-release/commit-analyzer": "^13.0.1",
-    "@semantic-release/release-notes-generator": "^14.0.3",
-    "axios": "^1.7.9",
-    "cache-envelop": "^1.0.0",
-    "node-fetch": "^3.3.2"
+    "axios": "^1.19.0",
+    "cache-envelop": "^2.0.0"
   }
 }

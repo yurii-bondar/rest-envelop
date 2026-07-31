@@ -1,29 +1,14 @@
+const { RequestTimeoutError } = require('./errors');
+
 /**
  * NodeFetch class provides a simplified interface for making HTTP requests
- * in a Node.js environment.
- * It supports request timeouts and dynamic import of the `node-fetch` module.
+ * using the native `fetch` global available in Node.js 18+.
+ * It supports request timeouts via `AbortController`.
  */
 class NodeFetch {
-  #fetch = null;
-
   constructor(options = {}) {
     this.baseURL = options.baseURL || '';
     this.defaultOptions = options;
-  }
-
-  /**
-   * Dynamically imports the `node-fetch` module if it hasn't been imported already.
-   * Ensures that the `node-fetch` dependency is loaded only when needed.
-   *
-   * @returns {Promise<Function>} A Promise resolving to the `fetch` function.
-   * @private
-   */
-  async #importFetch() {
-    if (!this.#fetch) {
-      const mod = await import('node-fetch');
-      this.#fetch = mod.default;
-    }
-    return this.#fetch;
   }
 
   /**
@@ -35,25 +20,25 @@ class NodeFetch {
    * @param {number} [options.timeout] - Timeout in milliseconds for the request.
    * @param {AbortSignal} [options.signal] - AbortSignal for manual request cancellation.
    * @returns {Promise<object>} A Promise resolving to the response object.
-   * @throws {Error} If the request times out or another error occurs.
+   * @throws {RequestTimeoutError} If the request times out.
    * @private
    */
   async #fetchWithTimeout(url, options) {
-    const fetch = await this.#importFetch();
-
     const controller = new AbortController();
     const timeout = options.timeout || this.defaultOptions.timeout || 0;
     const timeoutId = timeout > 0
       ? setTimeout(() => controller.abort(), timeout)
       : null;
 
+    const externalSignal = options.signal;
+    if (externalSignal) {
+      externalSignal.addEventListener('abort', () => controller.abort(), { once: true });
+    }
+
     try {
-      return await fetch(
-        url,
-        { ...options, signal: controller.signal },
-      );
+      return await fetch(url, { ...options, signal: controller.signal });
     } catch (error) {
-      if (error.name === 'AbortError') throw new Error(`timeout of ${timeout}ms exceeded`);
+      if (error.name === 'AbortError') throw new RequestTimeoutError(url, timeout);
       throw error;
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
