@@ -1,6 +1,6 @@
 {
   "name": "rest-envelop",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Wrapper for working with REST API using well-known axios and native fetch modules, with pluggable caching, retry with backoff, and TypeScript typings",
   "main": "index.js",
   "types": "index.d.ts",
